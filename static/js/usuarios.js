@@ -1,64 +1,18 @@
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("[Usuários] Página carregada — iniciando listagem...");
+/**
+ * Menu de usuarios.
+ *
+ * A checagem de sessao, o botao "voltar" e o logout ficam no auth.js. Antes cada
+ * um destes menus repetia esse bloco e escrevia o objeto do usuario direto no
+ * rotulo, o que mostrava o JSON cru na tela.
+ */
+document.addEventListener("DOMContentLoaded", function () {
+  const usuario = usuarioLogado();
 
-  const tabela = document.getElementById("tabela-usuarios");
-  if (tabela) {
-    carregarUsuarios();
+  const rotulo = document.getElementById("usuario-logado");
+  if (rotulo) {
+    rotulo.textContent = usuario?.login || "Usuario";
   }
 });
-
-async function carregarUsuarios() {
-  const tabelaUsuarios = document.getElementById("tabela-usuarios");
-  const mensagem = document.getElementById("mensagem");
-
-  if (!tabelaUsuarios) return;
-
-  tabelaUsuarios.innerHTML = `<tr><td colspan="3">Carregando...</td></tr>`;
-  if (mensagem) {
-    mensagem.textContent = "";
-    mensagem.className = "mensagem";
-  }
-
-  try {
-    const data = await apiFetch("/users?sort=id");
-    const usuarios = data.content || data || [];
-
-    tabelaUsuarios.innerHTML = "";
-
-    if (usuarios.length === 0) {
-      tabelaUsuarios.innerHTML =
-        "<tr><td colspan='3'>Nenhum usuário encontrado.</td></tr>";
-      if (mensagem) {
-        mensagem.textContent = "Nenhum usuário encontrado.";
-        mensagem.className = "mensagem erro";
-      }
-      return;
-    }
-
-    usuarios.forEach((u) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${u.id ?? "-"}</td>
-        <td>${u.name ?? "-"}</td>
-        <td>${u.role ?? "-"}</td>
-      `;
-      tabelaUsuarios.appendChild(tr);
-    });
-
-    if (mensagem) {
-      mensagem.textContent = `Total de usuários: ${usuarios.length}`;
-      mensagem.className = "mensagem sucesso";
-    }
-  } catch (error) {
-    console.error("[Usuários] Erro ao carregar:", error);
-    tabelaUsuarios.innerHTML =
-      "<tr><td colspan='3'>Erro ao carregar usuários.</td></tr>";
-    if (mensagem) {
-      mensagem.textContent = "Falha na comunicação com o servidor.";
-      mensagem.className = "mensagem erro";
-    }
-  }
-}
 
 function cadastrarUsuario() {
   window.location.href = "cadastro-usuario.html";

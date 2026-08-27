@@ -1,29 +1,15 @@
+/**
+ * Menu de ocorrencias.
+ *
+ * A versao anterior escrevia o objeto do usuario direto no rotulo, o que exibia
+ * o JSON cru na tela; e repetia a checagem de token que o auth.js ja faz.
+ */
 document.addEventListener("DOMContentLoaded", function () {
-  const token = localStorage.getItem("token");
-  const usuario = localStorage.getItem("usuario");
+  const usuario = usuarioLogado();
 
-  if (!token) {
-    window.location.href = "/index.html?error=unauthorized";
-    return;
-  }
-
-  const usuarioLogado = document.getElementById("usuario-logado");
-  if (usuarioLogado) usuarioLogado.textContent = usuario || "Usuário";
-
-  const btnHome = document.getElementById("btn-home");
-  if (btnHome) {
-    btnHome.addEventListener("click", () => {
-      window.location.href = "home.html";
-    });
-  }
-
-  const btnLogout = document.getElementById("btn-logout");
-  if (btnLogout) {
-    btnLogout.addEventListener("click", function () {
-      localStorage.removeItem("token");
-      localStorage.removeItem("usuario");
-      window.location.href = "/index.html?logout=true";
-    });
+  const rotulo = document.getElementById("usuario-logado");
+  if (rotulo) {
+    rotulo.textContent = usuario?.login || "Usuario";
   }
 });
 

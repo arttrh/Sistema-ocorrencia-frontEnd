@@ -1,28 +1,16 @@
+/**
+ * Dashboard de ocorrencias.
+ *
+ * Sessao, logout e o botao "home" ficam no auth.js. O "voltar" desta tela e'
+ * especifico (volta para o menu de ocorrencias), entao continua aqui.
+ */
 document.addEventListener("DOMContentLoaded", async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-        window.location.href = "/index.html?error=unauthorized";
-        return;
-    }
-
-    document.getElementById("btn-home").addEventListener("click", () => {
-        window.location.href = "home.html";
-    });
-
-    document.getElementById("btn-backward").addEventListener("click", () => {
+    document.getElementById("btn-backward")?.addEventListener("click", () => {
         window.location.href = "ocorrencias.html";
-    });
-
-    document.getElementById("btn-logout").addEventListener("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("usuario");
-        window.location.href = "/index.html?logout=true";
     });
 
     await carregarDashboard();
 });
-
-const API_BASE_URL = 'http://167.234.235.128:8090';
 
 async function carregarDashboard() {
     const mensagem = document.getElementById("mensagem-retorno");
@@ -30,27 +18,10 @@ async function carregarDashboard() {
     try {
         console.log("🔄 Iniciando carregamento do dashboard...");
         
-        const apiURL = `${API_BASE_URL}/incidents/summary`;
-        console.log("📡 Tentando acessar:", apiURL);
-
-        const resp = await fetch(apiURL, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem("token")}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        console.log("📊 Status da resposta:", resp.status);
-
-        if (resp.status === 500) {
-            const errorText = await resp.text();
-            console.error("❌ Erro 500 - Detalhes:", errorText);
-            throw new Error(`Erro interno do servidor (500). Detalhes: ${errorText.substring(0, 200)}`);
-        }
+        const resp = await apiFetch("/incidents/summary");
 
         if (!resp.ok) {
-            throw new Error(`Erro HTTP: ${resp.status} - ${resp.statusText}`);
+            throw new Error(await mensagemDeErro(resp));
         }
 
         const data = await resp.json();
@@ -65,17 +36,7 @@ async function carregarDashboard() {
     } catch (error) {
         console.error("❌ Erro ao carregar dashboard:", error);
         
-        let mensagemErro = `Falha ao carregar dashboard: ${error.message}`;
-
-        if (error.message.includes('500')) {
-            mensagemErro = "Erro interno do servidor. O backend pode estar com problemas. Verifique os logs do servidor.";
-        }
-
-        if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
-            mensagemErro = "Não foi possível conectar com o servidor. Verifique se o backend está rodando.";
-        }
-        
-        mensagem.textContent = mensagemErro;
+        mensagem.textContent = `Falha ao carregar dashboard: ${error.message}`;
         mensagem.className = "mensagem erro";
 
         mostrarDadosExemplo();
@@ -138,7 +99,7 @@ function criarGraficos(data) {
 
     const categorias = processarDados(data.byCategory || []);
     const tipos = processarDados(data.byType || []);
-    const turmas = processarDados(data.bySchooclass || []);
+    const turmas = processarDados(data.bySchoolClass || []);
     const alunos = processarDados(data.byStudent || []);
 
     console.log("📊 Dados processados:", { categorias, tipos, turmas, alunos });

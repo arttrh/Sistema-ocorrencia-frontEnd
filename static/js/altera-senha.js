@@ -1,33 +1,18 @@
+/**
+ * Troca da propria senha.
+ *
+ * O back-end so' aceita a troca quando o id do corpo e' o do usuario autenticado
+ * (ou quando quem chama e' ADMIN), entao o id vem do que o login guardou.
+ */
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("[Senha] Página de alteração de senha carregada.");
-
-  const token = localStorage.getItem("token");
-  const usuario = (() => {
-    try {
-      return JSON.parse(localStorage.getItem("usuario"));
-    } catch {
-      return null;
-    }
-  })();
-
+  const usuario = usuarioLogado();
   const userId = usuario?.id;
 
-  if (!token || !userId) {
-    alert("Sessão expirada. Faça login novamente.");
+  if (!userId) {
+    alert("Sessao expirada. Faca login novamente.");
     window.location.href = "/index.html?error=unauthorized";
     return;
   }
-
-  document
-    .getElementById("btn-home")
-    ?.addEventListener("click", () => (window.location.href = "home.html"));
-  document
-    .getElementById("btn-backward")
-    ?.addEventListener("click", () => window.history.back());
-  document.getElementById("btn-logout")?.addEventListener("click", () => {
-    localStorage.clear();
-    window.location.href = "/index.html?logout=true";
-  });
 
   const form = document.getElementById("form-alterar-senha");
   const mensagem = document.getElementById("mensagem-retorno");
@@ -61,25 +46,20 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      const response = await fetch(
-        "http://167.234.235.128:8090/users/password",
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            id: userId,
-            oldPassword: oldPwd,
-            newPassword: newPwd,
-          }),
-        }
-      );
+      const response = await apiFetch("/users/password", {
+        method: "PATCH",
+        body: JSON.stringify({
+          id: userId,
+          oldPassword: oldPwd,
+          newPassword: newPwd,
+        }),
+      });
 
       if (!response.ok) {
-        const erroText = await response.text();
-        exibirMensagem("Erro ao alterar senha: " + erroText, "erro");
+        exibirMensagem(
+          "Erro ao alterar senha: " + (await mensagemDeErro(response)),
+          "erro"
+        );
         return;
       }
 
@@ -88,14 +68,16 @@ document.addEventListener("DOMContentLoaded", () => {
         "sucesso"
       );
       form.reset();
-      localStorage.clear();
+      // A senha mudou: a sessao atual deixa de fazer sentido.
+      localStorage.removeItem("token");
+      localStorage.removeItem("usuario");
 
       setTimeout(() => {
         window.location.href = "/index.html?passwordChanged=true";
       }, 2000);
     } catch (error) {
       console.error("[Senha] Erro ao alterar:", error);
-      exibirMensagem("Falha na comunicação com o servidor.", "erro");
+      exibirMensagem(error.message || "Falha na comunicacao com o servidor.", "erro");
     }
   });
 });
