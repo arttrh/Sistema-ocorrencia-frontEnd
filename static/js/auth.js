@@ -37,6 +37,10 @@ async function apiFetch(path, options = {}) {
 }
 async function apiJson(path, options) {
   const response = await apiFetch(path, options);
+  if (response.status >= 500)
+    throw new Error(
+      "O servidor está iniciando ou indisponível. Aguarde um minuto e tente novamente.",
+    );
   if (!response.ok)
     throw new Error(
       response.status === 403

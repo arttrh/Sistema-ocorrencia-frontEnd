@@ -87,3 +87,20 @@ test("formulários contêm os campos usados por seus scripts", () => {
     }
   }
 });
+
+test("falha do servidor é apresentada como indisponibilidade", async () => {
+  const context = vm.createContext({
+    API_BASE_URL: "/api",
+    document: { addEventListener() {} },
+    localStorage: { getItem: () => "token-de-teste" },
+    fetch: async () => ({ status: 503, ok: false }),
+  });
+  vm.runInContext(
+    readFileSync(resolve(import.meta.dirname, "../static/js/auth.js"), "utf8"),
+    context,
+  );
+  await assert.rejects(
+    vm.runInContext('apiJson("/ocorrencias")', context),
+    /indisponível/,
+  );
+});

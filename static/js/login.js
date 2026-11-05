@@ -22,14 +22,21 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(
           response.status === 429
             ? "Muitas tentativas. Aguarde um minuto."
-            : "Confira seu e-mail e senha.",
+            : response.status === 401 || response.status === 400
+              ? "Confira seu e-mail e senha."
+              : "O servidor está iniciando ou indisponível. Aguarde um minuto e tente novamente.",
         );
       const data = await response.json();
+      if (typeof data.token !== "string" || !data.token)
+        throw new Error("O servidor não concluiu o login. Tente novamente.");
       localStorage.setItem("token", data.token);
       localStorage.setItem("usuario", JSON.stringify({ email }));
       location.href = "/templates/home.html";
     } catch (error) {
-      mensagem.textContent = error.message;
+      mensagem.textContent =
+        error instanceof TypeError || error instanceof SyntaxError
+          ? "Não foi possível acessar o servidor. Aguarde um minuto e tente novamente."
+          : error.message;
       mensagem.hidden = false;
     } finally {
       button.disabled = false;
