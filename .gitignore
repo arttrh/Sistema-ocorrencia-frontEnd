@@ -1,2 +1,4 @@
 .vercel/
 .taste-skill/
+.vercel
+.env*
