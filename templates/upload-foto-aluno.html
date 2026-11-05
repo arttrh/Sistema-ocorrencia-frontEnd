@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,20 +8,15 @@
     <title>Enviar Foto do Aluno - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/form.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
+    <script src="/static/js/config.js" defer></script>
     <script src="/static/js/auth.js" defer></script>
     <script src="/static/js/upload-foto-aluno.js" defer></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
   <body>
     <header>
@@ -50,7 +45,14 @@
 
           <div class="input-group">
             <label for="image">Foto do Aluno</label>
-            <input type="file" id="image" name="image" accept="image/*" required />
+            <input
+              type="file"
+              id="image"
+              aria-describedby="limite-foto"
+              name="image"
+              accept="image/png,image/jpeg"
+              required
+            />
           </div>
 
           <button type="submit" class="btn-enviar">
@@ -58,14 +60,22 @@
           </button>
         </form>
 
-        <p id="mensagem-retorno" class="mensagem"></p>
+        <p
+          role="status"
+          aria-live="polite"
+          id="mensagem-retorno"
+          class="mensagem"
+        ></p>
 
-        <div id="preview-container" style="margin-top: 20px; text-align: center;">
+        <div
+          id="preview-container"
+          style="margin-top: 20px; text-align: center"
+        >
           <img
             id="preview"
             src=""
             alt="Pré-visualização da imagem"
-            style="max-width: 200px; display: none; border-radius: 10px;"
+            style="max-width: 200px; display: none; border-radius: 10px"
           />
         </div>
       </div>

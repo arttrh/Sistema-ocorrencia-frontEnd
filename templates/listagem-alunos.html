@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,20 +8,15 @@
     <title>Listar Alunos - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/list.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
+    <script src="/static/js/config.js" defer></script>
     <script src="/static/js/auth.js" defer></script>
-    <script src="/static/js/listagem-alunos.js" defer></script>
+    <script src="/static/js/listagem.js" defer></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
   <body>
     <header>
@@ -52,21 +47,23 @@
           </div>
         </div>
 
-        <table
-          id="tabela-alunos"
-          data-tabela-alunos
-          data-url="/students"
-          data-colunas="id,name,imageUrl"
-        >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nome</th>
-              <th>Foto</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-container">
+          <table
+            id="tabela-alunos"
+            data-tabela-alunos
+            data-url="/aluno/ativos"
+            data-colunas="id,name,photo"
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Foto</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
         <div class="pagination">
           <button id="btn-prev" disabled>⟨ Anterior</button>
@@ -74,7 +71,12 @@
           <button id="btn-next" disabled>Próxima ⟩</button>
         </div>
 
-        <p id="mensagem-retorno" class="mensagem"></p>
+        <p
+          role="status"
+          aria-live="polite"
+          id="mensagem-retorno"
+          class="mensagem"
+        ></p>
       </div>
     </main>
   </body>

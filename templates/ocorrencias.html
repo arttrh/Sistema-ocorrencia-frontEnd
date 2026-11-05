@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,19 +8,15 @@
     <title>Ocorrências - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/menu.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
-    <script src="/static/js/ocorrencias.js" defer></script>
+    <script src="/static/js/config.js" defer></script>
+    <script src="/static/js/auth.js" defer></script>
+
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
   <body>
     <header>
@@ -39,54 +35,54 @@
       <div class="menu-home">
         <h2>Ações de Ocorrências</h2>
         <div class="cards-container">
-          <div class="card" onclick="dashboardOcorrencia()">
+          <a class="card" href="dashboard-ocorrencias.html">
             <i class="fa-solid fa-chart-pie fa-3x"></i>
             <h3>Dashboard</h3>
-          </div>
-          <div class="card" onclick="cadastrarOcorrencia()">
+          </a>
+          <a class="card" href="cadastro-ocorrencia.html">
             <i class="fa-solid fa-plus-circle fa-3x"></i>
             <h3>Cadastrar Ocorrência</h3>
-          </div>
-          <div class="card" onclick="listarTodasOcorrencias()">
+          </a>
+          <a class="card" href="listagem-ocorrencias.html">
             <i class="fa-solid fa-list fa-3x"></i>
             <h3>Listar Todas</h3>
-          </div>
-          <div class="card" onclick="listarAguardandoAtendimento()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-aguardando.html">
             <i class="fa-solid fa-clock fa-3x"></i>
             <h3>Aguardando Atendimento</h3>
-          </div>
-          <div class="card" onclick="listarEmAtendimento()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-atendendo.html">
             <i class="fa-solid fa-spinner fa-3x"></i>
             <h3>Em Atendimento</h3>
-          </div>
-          <div class="card" onclick="listarAtivas()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-ativas.html">
             <i class="fa-solid fa-bolt fa-3x"></i>
             <h3>Ativas</h3>
-          </div>
-          <div class="card" onclick="listarResolvidas()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-resolvidas.html">
             <i class="fa-solid fa-check fa-3x"></i>
             <h3>Resolvidas</h3>
-          </div>
-          <div class="card" onclick="listarEncerradasSemSolucao()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-nao-resolvidas.html">
             <i class="fa-solid fa-ban fa-3x"></i>
             <h3>Encerradas Sem Solução</h3>
-          </div>
-          <div class="card" onclick="listarFechadas()">
+          </a>
+          <a class="card" href="listagem-ocorrencias-fechadas.html">
             <i class="fa-solid fa-lock fa-3x"></i>
             <h3>Fechadas</h3>
-          </div>
-          <div class="card" onclick="atualizarOcorrencia()">
+          </a>
+          <a class="card" href="atualiza-ocorrencia.html">
             <i class="fa-solid fa-pen-to-square fa-3x"></i>
             <h3>Atualizar Ocorrência</h3>
-          </div>
-          <div class="card" onclick="alterarStatusOcorrencia()">
+          </a>
+          <a class="card" href="atualiza-status.html">
             <i class="fa-solid fa-exchange-alt fa-3x"></i>
             <h3>Alterar Status</h3>
-          </div>
-          <div class="card" onclick="excluirOcorrencia()">
+          </a>
+          <a class="card" href="inativa-ocorrencia.html">
             <i class="fa-solid fa-trash fa-3x"></i>
             <h3>Excluir Ocorrência</h3>
-          </div>
+          </a>
         </div>
       </div>
     </main>

@@ -1,38 +1,28 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-cadastro");
   const mensagem = document.getElementById("mensagem-retorno");
-
-  form.addEventListener("submit", async function (event) {
+  const campo = (id) => document.getElementById(id).value.trim();
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const birthInput = document.getElementById("birth-date").value;
-    const [year, month, day] = birthInput.split("-");
-    const formattedDate = `${day}/${month}/${year}`;
-
-    const data = {
-      name: document.getElementById("name").value.trim(),
-      birthDate: formattedDate,
-    };
-
+    const button = form.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
     try {
-      const response = await apiFetch("/students", {
+      await apiJson("/aluno/cadastrar", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          name: campo("name"),
+          photo: "/static/images/user-default.png",
+          dateBirth: dataBrasileira(campo("birth-date")),
+        }),
       });
-
-      if (response.ok) {
-        mensagem.textContent = "Aluno cadastrado com sucesso!";
-        mensagem.className = "mensagem sucesso";
-        form.reset();
-      } else {
-        const erro = await response.text();
-        mensagem.textContent = "Erro ao cadastrar: " + erro;
-        mensagem.className = "mensagem erro";
-      }
+      form.reset();
+      mensagem.textContent = "Operação concluída com sucesso.";
+      mensagem.className = "mensagem sucesso";
     } catch (error) {
-      mensagem.textContent = "Falha na comunicação com o servidor.";
+      mensagem.textContent = error.message;
       mensagem.className = "mensagem erro";
-      console.error("Erro:", error);
+    } finally {
+      if (button) button.disabled = false;
     }
   });
 });

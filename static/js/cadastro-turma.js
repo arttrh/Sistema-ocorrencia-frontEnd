@@ -1,81 +1,36 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-cadastro");
   const mensagem = document.getElementById("mensagem-retorno");
-
-  form.addEventListener("submit", async function (event) {
+  const campo = (id) => document.getElementById(id).value.trim();
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const data = {
-      name: document.getElementById("name").value.trim(),
-      shift: document.getElementById("shift").value.trim(),
-      year: document.getElementById("year").value.trim(),
-      semester: document.getElementById("semester").value,
-    };
-
+    const button = form.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
     try {
-      const response = await apiFetch("/schoolclasses", {
+      const year = campo("year");
+      await apiJson("/turmas/cadastrar", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          className: campo("name"),
+          turmaTurno: campo("shift"),
+          classYear: `${year}-01-01T00:00:00`,
+          semestry: `${year}-${campo("semester") === "SEGUNDO" ? "07" : "01"}-01T00:00:00`,
+        }),
       });
-
-      if (response.ok) {
-        mensagem.textContent = "Turma cadastrada com sucesso!";
-        mensagem.className = "mensagem sucesso";
-        form.reset();
-      } else {
-        const erro = await response.text();
-        mensagem.textContent = "Erro ao cadastrar: " + erro;
-        mensagem.className = "mensagem erro";
-      }
+      form.reset();
+      mensagem.textContent = "Operação concluída com sucesso.";
+      mensagem.className = "mensagem sucesso";
     } catch (error) {
-      mensagem.textContent = "Falha na comunicação com o servidor.";
+      mensagem.textContent = error.message;
       mensagem.className = "mensagem erro";
-      console.error("Erro:", error);
+    } finally {
+      if (button) button.disabled = false;
     }
   });
-
-  async function carregarShifts() {
-    try {
-      const response = await apiFetch("/schoolclasses/shifts");
-      if (!response.ok) throw new Error("Erro ao carregar turnos");
-
-      const shifts = await response.json();
-      const selectShift = document.getElementById("shift");
-      selectShift.innerHTML =
-        '<option value="" disabled selected>Selecione</option>';
-
-      shifts.forEach((shift) => {
-        const option = document.createElement("option");
-        option.value = shift;
-        option.textContent = shift.charAt(0) + shift.slice(1).toLowerCase();
-        selectShift.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Erro ao carregar turnos:", error);
-    }
-  }
-
-  async function carregarSemesters() {
-    try {
-      const response = await apiFetch("/schoolclasses/semesters");
-      if (!response.ok) throw new Error("Erro ao carregar semestres");
-
-      const semesters = await response.json();
-      const selectSemester = document.getElementById("semester");
-      selectSemester.innerHTML =
-        '<option value="" disabled selected>Selecione</option>';
-
-      semesters.forEach((semester) => {
-        const option = document.createElement("option");
-        option.value = semester;
-        option.textContent = semester.charAt(0) + semester.slice(1).toLowerCase();
-        selectSemester.appendChild(option);
-      });
-    } catch (error) {
-      console.error("Erro ao carregar semestres:", error);
-    }
-  }
-
-  carregarShifts();
-  carregarSemesters();
+  preencherSelect("shift", "/turmas/turnos").catch(
+    (error) => (mensagem.textContent = error.message),
+  );
+  preencherSelect("semester", "/turmas/semestres").catch(
+    (error) => (mensagem.textContent = error.message),
+  );
 });

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Vincular aluno à turma - Sistema Escolar</title>
+
+    <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
+    />
+
+    <script src="/static/js/config.js" defer></script>
+    <script src="/static/js/auth.js" defer></script>
+    <script src="/static/js/vincular-aluno.js" defer></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-container">
+        <h1>Vincular aluno à turma</h1>
+        <div class="buttons">
+          <button id="btn-home"><i class="fa-solid fa-house"></i> Home</button>
+          <button id="btn-backward">
+            <i class="fa-solid fa-arrow-left"></i> Voltar
+          </button>
+          <button id="btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i> Sair
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-container">
+        <h2>Formulário de Cadastro</h2>
+        <form id="form-vincular">
+          <label for="aluno-id">ID do aluno</label
+          ><input id="aluno-id" type="number" min="1" required />
+          <label for="turma-id">ID da turma</label
+          ><input id="turma-id" type="number" min="1" required /><button
+            type="submit"
+          >
+            Vincular aluno
+          </button>
+        </form>
+        <p
+          role="status"
+          aria-live="polite"
+          id="mensagem-retorno"
+          class="mensagem"
+        ></p>
+      </div>
+    </main>
+  </body>
+</html>

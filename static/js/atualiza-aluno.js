@@ -1,59 +1,31 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-atualiza-aluno");
   const mensagem = document.getElementById("mensagem-retorno");
-
-  form.addEventListener("submit", async function (event) {
+  const campo = (id) => document.getElementById(id).value.trim();
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const id = document.getElementById("id").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const birthInput = document.getElementById("birth-date").value;
-    let formattedDate = null;
-    if (birthInput) {
-      const [year, month, day] = birthInput.split("-");
-      formattedDate = `${day}/${month}/${year}`;
-    }
-
-    if (!id) {
-      mensagem.textContent = "ID obrigatório.";
-      mensagem.className = "mensagem erro";
-      return;
-    }
-
+    const button = form.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
     try {
-      const getResp = await apiFetch(`/students/${id}`, { method: "GET" });
-      if (!getResp.ok) {
-        const t = await getResp.text();
-        mensagem.textContent = "Erro ao carregar turma: " + t;
-        mensagem.className = "mensagem erro";
-        return;
-      }
-      const existing = await getResp.json();
-
-      const payload = {
-        ...existing,
-        id: Number(id),
-        name: name === "" ? existing.name : name,
-        ...(formattedDate ? { birthDate: formattedDate } : {})
-      };
-
-      const putResp = await apiFetch("/students", {
+      const id = campo("id");
+      const aluno = await apiJson(`/aluno/${id}`);
+      await apiJson(`/aluno/atualizar/${id}`, {
         method: "PUT",
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          photo: aluno.photo,
+          name: campo("name") || aluno.name,
+          dateBirth: campo("birth-date")
+            ? dataBrasileira(campo("birth-date"))
+            : dataBrasileira(aluno.dateBirth),
+        }),
       });
-
-      if (putResp.ok) {
-        mensagem.textContent = "Aluno atualizado com sucesso!";
-        mensagem.className = "mensagem sucesso";
-      } else {
-        const erro = await putResp.text();
-        mensagem.textContent = "Erro ao atualizar: " + erro;
-        mensagem.className = "mensagem erro";
-      }
+      mensagem.textContent = "Operação concluída com sucesso.";
+      mensagem.className = "mensagem sucesso";
     } catch (error) {
-      console.error("Erro:", error);
-      mensagem.textContent = "Falha na comunicação com o servidor.";
+      mensagem.textContent = error.message;
       mensagem.className = "mensagem erro";
+    } finally {
+      if (button) button.disabled = false;
     }
   });
 });

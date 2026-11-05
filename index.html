@@ -1,75 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Login</title>
-
-    <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/login.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
-    />
-
-    <!--<script src="/static/js/login.js" defer></script>-->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Entrar · Ocorrência escolar</title>
+    <link rel="stylesheet" href="/static/css/app.css" />
+    <script src="/static/js/config.js" defer></script>
+    <script src="/static/js/login.js" defer></script>
   </head>
-  <body>
-    <div class="box">
-      <div class="login">
-        <div class="loginBx">
-          <h2>
-            <i class="fa-solid fa-right-to-bracket"></i>
-            Login
-            <i class="fa-solid fa-heart"></i>
-            <br /><br />
-          </h2>
-          <form id="login-form">
-            <fieldset>
-              <div>
-                <input
-                  type="text"
-                  id="login"
-                  name="login"
-                  placeholder="Login"
-                />
-                <br /><br />
-              </div>
-              <div>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  placeholder="Senha"
-                />
-                <br /><br />
-              </div>
-              <input type="submit" value="Sign In" />
-              <br /><br />
-              <div class="group">
-                <a href="#">Esqueci a senha!</a>
-                <a href="/register.html">Cadastrar</a>
-              </div>
-            </fieldset>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="message">
-      <div id="erro-login" style="display: none; color: red">
-        Usuário ou senha inválidos.
-      </div>
-      <div id="logout-ok" style="display: none; color: green">
-        Logout realizado com sucesso.
-      </div>
-    </div>
+  <body class="pagina-login">
+    <main class="entrada">
+      <a class="marca" href="/">Ocorrência escolar</a>
+      <h1>Acompanhe a vida escolar.</h1>
+      <p>Alunos, turmas e ocorrências em um só lugar.</p>
+      <form id="login-form">
+        <label for="login">E-mail</label
+        ><input id="login" type="email" autocomplete="username" required />
+        <label for="password">Senha</label
+        ><input
+          id="password"
+          type="password"
+          autocomplete="current-password"
+          required
+        />
+        <button type="submit">Entrar</button>
+        <p id="erro-login" role="alert" hidden></p>
+        <p id="logout-ok" role="status" hidden>Você saiu da sua conta.</p>
+      </form>
+      <p class="ajuda">Use a conta fornecida pelo administrador da escola.</p>
+    </main>
   </body>
 </html>

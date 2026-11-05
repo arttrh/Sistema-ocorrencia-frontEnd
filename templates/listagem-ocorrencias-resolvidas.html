@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,20 +8,15 @@
     <title>Listar Ocorrências Resolvidas - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/list.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
+    <script src="/static/js/config.js" defer></script>
     <script src="/static/js/auth.js" defer></script>
-    <script src="/static/js/listagem-ocorrencias.js" defer></script>
+    <script src="/static/js/listagem.js" defer></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
   <body>
     <header>
@@ -49,31 +44,33 @@
               <option value="id">ID</option>
               <option value="schoolClass.name">Turma</option>
               <option value="student.name">Aluno</option>
-              <option value="type">Tipo</option>
+              <option value="occurrenceType.nameOccurrence">Tipo</option>
               <option value="status">Status</option>
             </select>
           </div>
         </div>
 
-        <table
-          id="tabela-ocorrencias-resolvidas"
-          data-tabela-ocorrencias
-          data-url="/incidents/status/solved"
-          data-colunas="id,schoolClassName,studentName,type,description,status,updateDate"
-        >
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Turma</th>
-              <th>Aluno</th>
-              <th>Tipo</th>
-              <th>Descrição</th>
-              <th>Status</th>
-              <th>Data de Atualização</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+        <div class="table-container">
+          <table
+            id="tabela-ocorrencias-resolvidas"
+            data-tabela-ocorrencias
+            data-url="/ocorrencias?status=RESOLVIDAS"
+            data-colunas="id,schoolClass,student,type,descriptionOccurrence,status,createdAt"
+          >
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Turma</th>
+                <th>Aluno</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>Registrado em</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
 
         <div class="pagination">
           <button id="btn-prev" disabled>⟨ Anterior</button>
@@ -81,7 +78,12 @@
           <button id="btn-next" disabled>Próxima ⟩</button>
         </div>
 
-        <p id="mensagem-retorno" class="mensagem"></p>
+        <p
+          role="status"
+          aria-live="polite"
+          id="mensagem-retorno"
+          class="mensagem"
+        ></p>
       </div>
     </main>
   </body>

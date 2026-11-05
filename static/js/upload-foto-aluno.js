@@ -1,55 +1,44 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-upload-foto");
   const mensagem = document.getElementById("mensagem-retorno");
-  const preview = document.getElementById("preview");
-
-  document.getElementById("image").addEventListener("change", function (event) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        preview.src = e.target.result;
-        preview.style.display = "block";
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.style.display = "none";
-    }
-  });
-
-  form.addEventListener("submit", async function (event) {
+  const campo = (id) => document.getElementById(id).value.trim();
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const id = document.getElementById("id").value.trim();
-    const file = document.getElementById("image").files[0];
-
-    if (!id || !file) {
-      mensagem.textContent = "Por favor, preencha todos os campos.";
-      mensagem.className = "mensagem erro";
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
+    const button = form.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
     try {
-      const response = await apiFetch(`/students/${id}/image`, {
-        method: "PATCH",
-        body: formData,
+      const file = document.getElementById("image").files[0];
+      if (
+        !file ||
+        !["image/png", "image/jpeg"].includes(file.type) ||
+        file.size > 150000
+      )
+        throw new Error("Use PNG ou JPEG de até 150 KB.");
+      const photo = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
       });
-
-      if (response.ok) {
-        mensagem.textContent = "Foto enviada com sucesso!";
-        mensagem.className = "mensagem sucesso";
-      } else {
-        const erro = await response.text();
-        mensagem.textContent = "Erro ao enviar foto: " + erro;
-        mensagem.className = "mensagem erro";
-      }
+      const id = campo("id");
+      const aluno = await apiJson(`/aluno/${id}`);
+      await apiJson(`/aluno/atualizar/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: aluno.name,
+          dateBirth: dataBrasileira(aluno.dateBirth),
+          photo,
+        }),
+      });
+      document.getElementById("preview").src = photo;
+      document.getElementById("preview").style.display = "block";
+      mensagem.textContent = "Operação concluída com sucesso.";
+      mensagem.className = "mensagem sucesso";
     } catch (error) {
-      mensagem.textContent = "Falha na comunicação com o servidor.";
+      mensagem.textContent = error.message;
       mensagem.className = "mensagem erro";
-      console.error("Erro:", error);
+    } finally {
+      if (button) button.disabled = false;
     }
   });
 });

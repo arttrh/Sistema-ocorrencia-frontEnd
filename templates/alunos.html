@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,19 +8,15 @@
     <title>Alunos - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/menu.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
-    <script src="/static/js/alunos.js" defer></script>
+    <script src="/static/js/config.js" defer></script>
+    <script src="/static/js/auth.js" defer></script>
+
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
   <body>
     <header>
@@ -39,30 +35,30 @@
       <div class="menu-home">
         <h2>Ações de Alunos</h2>
         <div class="cards-container">
-          <div class="card" onclick="cadastrarAluno()">
+          <a class="card" href="cadastro-aluno.html">
             <i class="fa-solid fa-user-plus fa-3x"></i>
             <h3>Cadastrar Aluno</h3>
-          </div>
-          <div class="card" onclick="enviarFoto()">
+          </a>
+          <a class="card" href="upload-foto-aluno.html">
             <i class="fa-solid fa-camera fa-3x"></i>
             <h3>Enviar Foto</h3>
-          </div>
-          <div class="card" onclick="listarAlunos()">
+          </a>
+          <a class="card" href="listagem-alunos.html">
             <i class="fa-solid fa-list fa-3x"></i>
             <h3>Listar Alunos</h3>
-          </div>
-          <div class="card" onclick="consultarAluno()">
+          </a>
+          <a class="card" href="consulta-aluno.html">
             <i class="fa-solid fa-search fa-3x"></i>
             <h3>Consultar Dados</h3>
-          </div>
-          <div class="card" onclick="atualizarAluno()">
+          </a>
+          <a class="card" href="atualiza-aluno.html">
             <i class="fa-solid fa-pen-to-square fa-3x"></i>
             <h3>Atualizar Dados</h3>
-          </div>
-          <div class="card" onclick="excluirAluno()">
+          </a>
+          <a class="card" href="inativa-aluno.html">
             <i class="fa-solid fa-user-minus fa-3x"></i>
             <h3>Excluir Aluno</h3>
-          </div>
+          </a>
         </div>
       </div>
     </main>

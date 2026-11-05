@@ -1,67 +1,58 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const token = localStorage.getItem("token");
-
-  if (!token) {
-    console.warn("[Auth] Sem token — redirecionando para login.");
-    window.location.href = "/index.html?error=unauthorized";
+  if (!localStorage.getItem("token")) {
+    location.href = "/index.html?error=unauthorized";
     return;
   }
-
-  document.getElementById("btn-home")?.addEventListener("click", () => {
-    window.location.href = "home.html";
-  });
-
-  document.getElementById("btn-backward")?.addEventListener("click", () => {
-    window.history.back();
-  });
-
+  document
+    .getElementById("btn-home")
+    ?.addEventListener("click", () => (location.href = "/templates/home.html"));
+  document
+    .getElementById("btn-backward")
+    ?.addEventListener("click", () => history.back());
   document.getElementById("btn-logout")?.addEventListener("click", () => {
-    localStorage.clear();
-    window.location.href = "/index.html?logout=true";
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    location.href = "/index.html?logout=true";
   });
-
-  console.log("[Auth] Sessão ativa, token carregado.");
+  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+  const nome = document.getElementById("usuario-logado");
+  if (nome) nome.textContent = usuario.email || "Usuário";
 });
-
-/**
- * apiFetch — wrapper global para chamadas à API autenticadas.
- * @param {string} url URL completa ou relativa (ex: "/users?page=0")
- * @param {object} options opções fetch (sem precisar do header Authorization)
- * @returns {Promise<Response>}
- */
-async function apiFetch(url, options = {}) {
-  const token = localStorage.getItem("token");
-  const fullUrl = url.startsWith("http")
-    ? url
-    : `http://167.234.235.128:8090${url}`;
-
-  const config = {
+async function apiFetch(path, options = {}) {
+  const response = await fetch(API_BASE_URL + path, {
     ...options,
     headers: {
-      Authorization: `Bearer ${token}`,
-      ...(options.headers || {}),
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      ...options.headers,
     },
-  };
-
-  if (!(options.body instanceof FormData)) {
-    config.headers["Content-Type"] = "application/json";
-  }
-
-  console.log(`[apiFetch] ${config.method || "GET"} ${fullUrl}`);
-
-  const response = await fetch(fullUrl, config);
-
+  });
   if (response.status === 401) {
-    console.warn("[apiFetch] 401 — Não autorizado, redirecionando...");
-    window.location.href = "/index.html?error=unauthorized";
-    return Promise.reject(new Error("401 Unauthorized"));
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    location.href = "/index.html?error=unauthorized";
+    throw new Error("Sessão expirada. Entre novamente.");
   }
-
-  if (response.status === 403) {
-    console.warn("[apiFetch] 403 — Acesso negado, redirecionando...");
-    window.location.href = "acesso-negado.html";
-    return Promise.reject(new Error("403 Forbidden"));
-  }
-
   return response;
+}
+async function apiJson(path, options) {
+  const response = await apiFetch(path, options);
+  if (!response.ok)
+    throw new Error(
+      response.status === 403
+        ? "Seu perfil não tem permissão para esta ação."
+        : (await response.text()) || "Não foi possível concluir a ação.",
+    );
+  return response.status === 204 ? null : response.json();
+}
+function dataBrasileira(iso) {
+  return iso?.slice(0, 10).split("-").reverse().join("/") || "";
+}
+async function preencherSelect(id, path, valor, rotulo) {
+  const select = document.getElementById(id);
+  select.replaceChildren(new Option("Selecione", ""));
+  for (const item of await apiJson(path))
+    select.add(
+      new Option(rotulo ? item[rotulo] : item, valor ? item[valor] : item),
+    );
 }

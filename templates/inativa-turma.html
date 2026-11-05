@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
@@ -8,22 +8,17 @@
     <title>Cancelar Turma - Sistema Escolar</title>
 
     <link rel="icon" href="/static/images/autismo-96.png" type="image/x-icon" />
-
-    <link rel="stylesheet" href="/static/css/card.css" />
-
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Poppins:200,300,400,500,600,700,800,900&display=swap"
-    />
     <link
       rel="stylesheet"
       href="https://use.fontawesome.com/releases/v6.5.1/css/all.css"
     />
 
+    <script src="/static/js/config.js" defer></script>
     <script src="/static/js/auth.js" defer></script>
-    <script src="/static/js/inativa-turma.js" defer></script>
+    <script src="/static/js/consulta.js" defer></script>
+    <link rel="stylesheet" href="/static/css/app.css" />
   </head>
-  <body>
+  <body data-recurso="turma" data-excluir="true">
     <header>
       <div class="header-container">
         <h1>Cancelar Turma</h1>
@@ -59,7 +54,12 @@
           <p>Aguardando consulta...</p>
         </div>
 
-        <p id="mensagem-retorno" class="mensagem"></p>
+        <p
+          role="status"
+          aria-live="polite"
+          id="mensagem-retorno"
+          class="mensagem"
+        ></p>
       </div>
     </main>
   </body>

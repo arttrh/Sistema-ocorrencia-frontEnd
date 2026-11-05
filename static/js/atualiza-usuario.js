@@ -1,54 +1,29 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("form-atualiza-usuario");
   const mensagem = document.getElementById("mensagem-retorno");
-
-  form.addEventListener("submit", async function (event) {
+  const campo = (id) => document.getElementById(id).value.trim();
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const id = document.getElementById("id").value.trim();
-    const name = document.getElementById("name").value.trim();
-    const login = document.getElementById("login").value.trim();
-
-    if (!id) {
-      mensagem.textContent = "ID obrigatório.";
-      mensagem.className = "mensagem erro";
-      return;
-    }
-
+    const button = form.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
     try {
-      const getResp = await apiFetch(`/users/${id}`, { method: "GET" });
-      if (!getResp.ok) {
-        const t = await getResp.text();
-        mensagem.textContent = "Erro ao carregar usuário: " + t;
-        mensagem.className = "mensagem erro";
-        return;
-      }
-      const existing = await getResp.json();
-
-      const payload = {
-        ...existing,
-        id: Number(id),
-        name: name === "" ? existing.name : name,
-        login: login === "" ? existing.login : login
-      };
-
-      const putResp = await apiFetch("/users", {
+      const id = campo("id");
+      const usuario = await apiJson(`/usuario/${id}`);
+      await apiJson(`/usuario/atualizar/${id}`, {
         method: "PUT",
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          name: campo("name") || usuario.name,
+          email: campo("login") || usuario.email,
+          perfil: usuario.perfil,
+        }),
       });
-
-      if (putResp.ok) {
-        mensagem.textContent = "Usuário atualizado com sucesso!";
-        mensagem.className = "mensagem sucesso";
-      } else {
-        const erro = await putResp.text();
-        mensagem.textContent = "Erro ao atualizar: " + erro;
-        mensagem.className = "mensagem erro";
-      }
+      mensagem.textContent = "Operação concluída com sucesso.";
+      mensagem.className = "mensagem sucesso";
     } catch (error) {
-      console.error("Erro:", error);
-      mensagem.textContent = "Falha na comunicação com o servidor.";
+      mensagem.textContent = error.message;
       mensagem.className = "mensagem erro";
+    } finally {
+      if (button) button.disabled = false;
     }
   });
 });
