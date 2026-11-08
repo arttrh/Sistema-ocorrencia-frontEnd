@@ -22,12 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
           password,
         }),
       });
-      if (!response.ok)
-        throw new Error(
-          response.status === 400 || response.status === 409
-            ? "Confira os dados ou use outro e-mail."
-            : "O servidor está iniciando ou indisponível. Aguarde um minuto e tente novamente.",
-        );
+      if (!response.ok) {
+        const body = await response.text();
+        if (response.status === 400 || response.status === 409)
+          throw new Error(body || "Confira os dados ou use outro e-mail.");
+        throw new Error("O servidor está iniciando ou indisponível. Aguarde um minuto e tente novamente.");
+      }
       location.href = "/index.html?cadastro=ok";
     } catch (error) {
       mensagem.textContent =

@@ -45,6 +45,7 @@ test("cadastro público envia somente os dados da conta", () => {
   const source = readFileSync(resolve(import.meta.dirname, "../static/js/cadastro.js"), "utf8");
   assert.match(source, /API_BASE_URL \+ "\/usuario\/cadastro"/);
   assert.doesNotMatch(source, /perfil:/);
+  assert.match(source, /const body = await response\.text\(\)/);
 });
 
 test("API envia JWT e apresenta erro de permissão sem encerrar a sessão", async () => {
