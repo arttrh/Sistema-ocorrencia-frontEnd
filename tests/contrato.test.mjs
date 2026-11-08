@@ -8,6 +8,7 @@ test("páginas usam scripts e links locais existentes", () => {
   const root = resolve(import.meta.dirname, "..");
   const files = [
     "index.html",
+    "cadastro.html",
     ...readdirSync(resolve(root, "templates")).map(
       (file) => `templates/${file}`,
     ),
@@ -31,13 +32,19 @@ test("páginas usam scripts e links locais existentes", () => {
       new Set(scripts).size,
       `${file}: script duplicado`,
     );
-    if (file !== "index.html") {
+    if (scripts.includes("/static/js/auth.js")) {
       assert.ok(
         scripts.indexOf("/static/js/config.js") <
           scripts.indexOf("/static/js/auth.js"),
       );
     }
   }
+});
+
+test("cadastro público envia somente os dados da conta", () => {
+  const source = readFileSync(resolve(import.meta.dirname, "../static/js/cadastro.js"), "utf8");
+  assert.match(source, /API_BASE_URL \+ "\/usuario\/cadastro"/);
+  assert.doesNotMatch(source, /perfil:/);
 });
 
 test("API envia JWT e apresenta erro de permissão sem encerrar a sessão", async () => {

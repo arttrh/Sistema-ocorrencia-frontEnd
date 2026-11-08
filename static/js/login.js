@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const mensagem = document.getElementById("erro-login");
   if (new URLSearchParams(location.search).has("logout"))
     document.getElementById("logout-ok").hidden = false;
+  if (new URLSearchParams(location.search).get("cadastro") === "ok")
+    document.getElementById("cadastro-ok").hidden = false;
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const button = form.querySelector("button");

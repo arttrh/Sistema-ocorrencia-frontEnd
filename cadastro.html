@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Criar conta · Ocorrência escolar</title>
+    <link rel="stylesheet" href="/static/css/app.css" />
+    <script src="/static/js/config.js" defer></script>
+    <script src="/static/js/cadastro.js" defer></script>
+  </head>
+  <body class="pagina-login">
+    <main class="entrada">
+      <a class="marca" href="/">Ocorrência escolar</a>
+      <h1>Crie sua conta.</h1>
+      <p>Seu acesso será criado como professor.</p>
+      <form id="cadastro-form">
+        <label for="name">Nome completo</label>
+        <input id="name" type="text" autocomplete="name" required />
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="email" required />
+        <label for="password">Senha</label>
+        <input id="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" required />
+        <label for="password-confirmation">Confirme sua senha</label>
+        <input id="password-confirmation" type="password" minlength="8" maxlength="72" autocomplete="new-password" required />
+        <button type="submit">Criar conta</button>
+        <p id="erro-cadastro" role="alert" hidden></p>
+      </form>
+      <p class="ajuda">Já tem uma conta? <a href="/">Entrar</a>.</p>
+    </main>
+  </body>
+</html>
